@@ -6,6 +6,21 @@ use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\Player;
 
 enum SoundListEnum: string {
+
+    public function sendTo(Player $player, int $volume = 1, float $pitch = 0.6): void {
+        $pos = $player->getPosition();
+
+        $packet = new PlaySoundPacket();
+        $packet->x = $pos->getX();
+        $packet->y = $pos->getY();
+        $packet->z = $pos->getZ();
+        $packet->volume = $volume;
+        $packet->pitch = $pitch;
+        $packet->soundName = $this->value;
+
+        $player->getNetworkSession()->sendDataPacket($packet);
+    }
+
     case AMBIENT_BASALT_DELTAS_ADDITIONS = "ambient.basalt_deltas.additions";
     case AMBIENT_BASALT_DELTAS_LOOP = "ambient.basalt_deltas.loop";
     case AMBIENT_BASALT_DELTAS_MOOD = "ambient.basalt_deltas.mood";
@@ -1528,19 +1543,4 @@ enum SoundListEnum: string {
     case VAULT_STEP = "vault.step";
     case VR_STUTTERTURN = "vr.stutterturn";
     case WIND_CHARGE_BURST = "wind_charge.burst";
-
-    public function sendTo(Player $player, int $volume = 1, float $pitch = 0.6): void {
-        $pos = $player->getPosition();
-
-        $packet = new PlaySoundPacket();
-        $packet->x = $pos->getX();
-        $packet->y = $pos->getY();
-        $packet->z = $pos->getZ();
-        $packet->volume = $volume;
-        $packet->pitch = $pitch;
-        $packet->soundName = $this->value;
-
-        $player->getNetworkSession()->sendDataPacket($packet);
-    }
-
 }
